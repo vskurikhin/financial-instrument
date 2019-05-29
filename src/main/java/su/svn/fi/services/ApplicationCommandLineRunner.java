@@ -56,15 +56,13 @@ public class ApplicationCommandLineRunner implements CommandLineRunner
     @Override
     public void run(String... args) throws Exception
     {
-        reader.read(strings -> {
-            for (String line : strings) {
-                Instrument instrument = parser.parse(line);
-                if (dayChecker.isValid(instrument.getDate())) {
-                    CalculationEngine engine = getEngine(instrument.getName());
-                    engine.apply(instrument);
-                }
+        reader.read(strings -> strings.stream().parallel().forEach(line -> {
+            Instrument instrument = parser.parse(line);
+            if (dayChecker.isValid(instrument.getDate())) {
+                CalculationEngine engine = getEngine(instrument.getName());
+                engine.apply(instrument);
             }
-        });
+        }));
 
         engines.forEach((instrumentName, calculationEngine) -> {
             System.out.println("Instrument name  = " + instrumentName);

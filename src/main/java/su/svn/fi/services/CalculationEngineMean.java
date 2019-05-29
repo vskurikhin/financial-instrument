@@ -5,30 +5,26 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
 import su.svn.fi.models.Instrument;
 
+import java.util.concurrent.atomic.DoubleAdder;
+import java.util.concurrent.atomic.LongAdder;
+
 @Service("calculationEngineMean")
 public class CalculationEngineMean implements CalculationEngine
 {
-    private static final Log LOG = LogFactory.getLog(CalculationEngineMean.class);
+    private DoubleAdder sum = new DoubleAdder();
 
-    private double sum = 0;
-
-    private long count = 0L;
-
-    public CalculationEngineMean()
-    {
-        LOG.info("Instance of " + this.getClass().getName());
-    }
+    private LongAdder count = new LongAdder();
 
     @Override
     public void apply(Instrument instrument)
     {
-        sum += instrument.getValue();
-        count++;
+        sum.add(instrument.getValue());
+        count.increment();
     }
 
     @Override
     public double getResult()
     {
-        return sum / count;
+        return sum.doubleValue() / count.longValue();
     }
 }

@@ -10,7 +10,8 @@ import java.util.function.Consumer;
 @Service
 public class ReaderStdIn implements Reader
 {
-    private final int parallelismus = 2;
+    private final int batchSize = 2; // TODO read from property
+
     private Scanner console;
 
     public ReaderStdIn(Scanner scanner)
@@ -30,7 +31,7 @@ public class ReaderStdIn implements Reader
             try (Scanner lineScanner = new Scanner(console.nextLine())) {
                 List<String> list = new ArrayList<>();
 
-                for (int i = 0; i < parallelismus && lineScanner.hasNext(); i++) {
+                for (int i = 0; i < batchSize && lineScanner.hasNext(); i++) {
                     list.add(lineScanner.next());
                 }
                 consumer.accept(list);
