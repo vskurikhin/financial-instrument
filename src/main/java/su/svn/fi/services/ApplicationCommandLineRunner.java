@@ -5,14 +5,16 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
+import su.svn.fi.exceptions.UnexpectedInputLineException;
 import su.svn.fi.models.Instrument;
 
+import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-@Service
+@Component
 public class ApplicationCommandLineRunner implements CommandLineRunner
 {
     private static final Log LOG = LogFactory.getLog(ApplicationCommandLineRunner.class);
@@ -56,11 +58,16 @@ public class ApplicationCommandLineRunner implements CommandLineRunner
     @Override
     public void run(String... args) throws Exception
     {
-        reader.read(strings -> strings.stream().parallel().forEach(line -> {
-            Instrument instrument = parser.parse(line);
-            if (dayChecker.isValid(instrument.getDate())) {
-                CalculationEngine engine = getEngine(instrument.getName());
-                engine.apply(instrument);
+        reader.read(strings -> strings.parallelStream().forEach(line -> {
+            try {
+                Instrument instrument = parser.parse(line);
+                if (dayChecker.isValid(instrument.getDate())) {
+                    CalculationEngine engine = getEngine(instrument.getName());
+                    engine.apply(instrument);
+                }
+            }
+            catch (UnexpectedInputLineException | DateTimeParseException | NumberFormatException e) {
+                LOG.error(e);
             }
         }));
 

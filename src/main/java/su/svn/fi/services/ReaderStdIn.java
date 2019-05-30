@@ -1,6 +1,8 @@
 package su.svn.fi.services;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import su.svn.fi.configs.YamlApplicationProperties;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +12,7 @@ import java.util.function.Consumer;
 @Service
 public class ReaderStdIn implements Reader
 {
-    private final int batchSize = 2; // TODO read from property
+    private int batchSize = 2;
 
     private Scanner console;
 
@@ -19,9 +21,11 @@ public class ReaderStdIn implements Reader
         console = scanner;
     }
 
-    public ReaderStdIn()
+    @Autowired
+    public ReaderStdIn(YamlApplicationProperties yap)
     {
         this(new Scanner(System.in));
+        batchSize = yap.getBatchSize();
     }
 
     @Override

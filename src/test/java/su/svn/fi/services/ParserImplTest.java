@@ -2,9 +2,11 @@ package su.svn.fi.services;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import su.svn.fi.exceptions.UnexpectedInputLineException;
 import su.svn.fi.models.Instrument;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -54,6 +56,13 @@ class ParserImplTest
         assertEquals(expected, date);
     }
 
+    String lineCase0 = "";
+    @Test
+    void test_parse_bad_case0()
+    {
+        assertThrows(UnexpectedInputLineException.class, () -> parser.parse(lineCase0));
+    }
+
     String lineCase1 = "INSTRUMENT1,01-Jan-1996,2.4655";
     @Test
     void test_parse_good_case1()
@@ -85,5 +94,47 @@ class ParserImplTest
         );
         Instrument instrument = parser.parse(lineCase3);
         assertEquals(expected, instrument);
+    }
+
+    String lineCase4 = ",";
+    @Test
+    void test_parse_bad_case4()
+    {
+        assertThrows(UnexpectedInputLineException.class, () -> parser.parse(lineCase4));
+    }
+
+    String lineCase5 = ",,";
+    @Test
+    void test_parse_bad_case5()
+    {
+        assertThrows(UnexpectedInputLineException.class, () -> parser.parse(lineCase5));
+    }
+
+    String lineCase6 = "INSTRUMENT,23-May-1997,115.405";
+    @Test
+    void test_parse_bad_case6()
+    {
+        assertThrows(UnexpectedInputLineException.class, () -> parser.parse(lineCase6));
+    }
+
+    String lineCase7 = "INSTRUMENT1,,115.405";
+    @Test
+    void test_parse_bad_case7()
+    {
+        assertThrows(DateTimeParseException.class, () -> parser.parse(lineCase7));
+    }
+
+    String lineCase8 = "INSTRUMENT1,23-May-1997,";
+    @Test
+    void test_parse_bad_case8()
+    {
+        assertThrows(UnexpectedInputLineException.class, () -> parser.parse(lineCase8));
+    }
+
+    String lineCase9 = "INSTRUMENT1,23-May-1997,A";
+    @Test
+    void test_parse_bad_case9()
+    {
+        assertThrows(NumberFormatException.class, () -> parser.parse(lineCase9));
     }
 }
