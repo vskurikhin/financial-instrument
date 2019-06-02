@@ -28,7 +28,7 @@ class CalculationEngineMeanForNovember2014Test
     @Test
     void test_one_element()
     {
-        Instrument test = new Instrument("INSTRUMENT2", LocalDate.of(2014, Month.NOVEMBER, 1), 1.0);
+        Instrument test = new Instrument("INSTRUMENT2", 0, LocalDate.of(2014, Month.NOVEMBER, 1), 1.0);
         engineMean.apply(test);
         assertEquals(1.0, engineMean.getResult());
     }
@@ -36,7 +36,7 @@ class CalculationEngineMeanForNovember2014Test
     @Test
     void test_discaded_one_element()
     {
-        Instrument test = new Instrument("INSTRUMENT2", LocalDate.of(1996, 1, 1), 1.0);
+        Instrument test = new Instrument("INSTRUMENT2", 0, LocalDate.of(1996, 1, 1), 1.0);
         engineMean.apply(test);
         assertEquals(Double.NaN, engineMean.getResult());
     }
@@ -44,9 +44,9 @@ class CalculationEngineMeanForNovember2014Test
     @Test
     void test_three_elements()
     {
-        Instrument test1 = new Instrument("INSTRUMENT2", LocalDate.of(1996, 1, 1), 1.0);
-        Instrument test2 = new Instrument("INSTRUMENT2", LocalDate.of(2014, Month.NOVEMBER, 2), 2.0);
-        Instrument test3 = new Instrument("INSTRUMENT2", LocalDate.of(2014, Month.NOVEMBER, 3), 3.0);
+        Instrument test1 = new Instrument("INSTRUMENT2", 0, LocalDate.of(1996, 1, 1), 1.0);
+        Instrument test2 = new Instrument("INSTRUMENT2", 0, LocalDate.of(2014, Month.NOVEMBER, 2), 2.0);
+        Instrument test3 = new Instrument("INSTRUMENT2", 0, LocalDate.of(2014, Month.NOVEMBER, 3), 3.0);
         engineMean.apply(test1);
         engineMean.apply(test2);
         engineMean.apply(test3);

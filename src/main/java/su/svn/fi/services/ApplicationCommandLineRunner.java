@@ -58,15 +58,15 @@ public class ApplicationCommandLineRunner implements CommandLineRunner
     @Override
     public void run(String... args) throws Exception
     {
-        reader.read(strings -> strings.parallelStream().forEach(line -> {
+        reader.read(strings -> strings.entrySet().parallelStream().forEach(entry -> {
             try {
-                Instrument instrument = parser.parse(line);
+                Instrument instrument = parser.parse(entry.getKey(), entry.getValue());
                 if (dayChecker.isValid(instrument.getDate())) {
                     CalculationEngine engine = getEngine(instrument.getName());
                     engine.apply(instrument);
                 }
             }
-            catch (UnexpectedInputLineException | DateTimeParseException | NumberFormatException e) {
+            catch (UnexpectedInputLineException | NumberFormatException | DateTimeParseException e) {
                 LOG.error(e);
             }
         }));

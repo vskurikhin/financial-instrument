@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>su.svn</groupId>
 	<artifactId>fi</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<name>fi</name>
 	<description>Demo project for Spring Boot</description>
 
@@ -56,10 +56,14 @@
 
 	<build>
 		<finalName>${project.artifactId}</finalName>
+
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<executable>true</executable>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
